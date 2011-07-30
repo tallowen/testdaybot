@@ -25,14 +25,20 @@ setInterval(function(){
     joined=[]
 }, 604800000)//one week
 
-client.addListener('join'+CHANNEL, function (nick) {
+var seen = function(nick){
     for (i in joined){
-        if (foo[i]=='ba'){
-            client.say(CHANNEL, "Welcome to "+CHANNEL+" "+nick+"! Please feel free to check out the etherpad at "+ETHERPAD+" or ask anyone questions for information on how to get started");
-            joined.push(nick);
-            console.log("Welcomed "+nick);
-            break;
+        if (foo[i]==nick){
+            return true;
         }
+    }
+    return false;
+}
+
+client.addListener('join'+CHANNEL, function (nick) {
+    if (!seen()){
+        client.say(CHANNEL, "Welcome to "+CHANNEL+" "+nick+"! Please feel free to check out the etherpad at "+ETHERPAD+" or ask anyone questions for information on how to get started");
+        joined.push(nick);
+        console.log("Welcomed "+nick);
     }
 });
 
