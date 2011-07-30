@@ -1,0 +1,9 @@
+{
+  "name": "testdaybot",
+  "description": "An irc bot to help out around Mozilla QA Testdays",
+  "version": "0.0.1",
+  "dependencies": {
+    "irc":">=0.2.0",
+    "redis":">=0.6.6"
+  }
+}

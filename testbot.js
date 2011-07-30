@@ -2,6 +2,8 @@
 var CHANNEL ='#testbot',
     ETHERPAD ='(Check channel topic)',
     irc = require('irc');
+    redislib = require("redis"),
+    redis = redislib.createClient(),
 
 var client = new irc.Client('irc.mozilla.org', 'testbotowen', {
     channels: [CHANNEL],
@@ -10,8 +12,9 @@ var client = new irc.Client('irc.mozilla.org', 'testbotowen', {
 console.log('hello - might be connected');
 
 client.addListener('message', function (from, to, message) {
+/*
     console.log(from + ' => ' + to + ': ' + message);
-    client.say(CHANNEL, message);
+    client.say(CHANNEL, message);*/
 });
 
 client.addListener('join'+CHANNEL, function (nick) {
@@ -27,3 +30,21 @@ client.addListener('topic', function (channel, topic, nick) {
         }
     }
 });
+
+//REDIS
+/*
+redis.on("error", function (err) {
+    console.log("Redis connection error to " + redis.host + ":" + redis.port + " - " + err);
+});
+
+
+var redis_get= function(key,callback){
+    //Asyncronous Get Wrapper for redis
+    redis.GET(key, function(err, res){
+        callback(res);
+    });
+}
+
+function set_playlist(ID,playlist){
+    redis.SET('playlist:'+ID,playlist);
+}*/
