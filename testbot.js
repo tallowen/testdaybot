@@ -1,9 +1,9 @@
 //Channel for testday
 var CHANNEL ='#testbot',
     ETHERPAD ='(Check channel topic)',
-    irc = require('irc');
+    irc = require('irc'),
     redislib = require("redis"),
-    redis = redislib.createClient(),
+    redis = redislib.createClient()
 
 var client = new irc.Client('irc.mozilla.org', 'testbotowen', {
     channels: [CHANNEL],
