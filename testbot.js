@@ -70,5 +70,5 @@ client.addListener('pm', function (nick, text) {
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
   res.end('IRC bot at '+CHANNEL+' on irc.mozilla.org\n');
-}).listen(1337);
+}).listen(process.env.PORT||8080);
 
