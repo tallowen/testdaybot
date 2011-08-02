@@ -1,68 +1,59 @@
 //Channel for testday
 var CHANNEL ='#testbot',
     ETHERPAD ='(Check channel topic)',
-    irc = require('irc')//,
-    //redislib = require("redis"),
-    //redis = redislib.createClient()
+    irc = require('irc'),
+    utils = require('utils')
 
 var client = new irc.Client('irc.mozilla.org', 'testbotowen', {
+    userName: 'testdaybot',
+    realName: 'Owens testdaybot @ github.com/highriseo/testdaybot',
+    port: 6697,
+    debug: false,
+    showErrors: false,
+    autoRejoin: true,
+    autoConnect: true,
     channels: [CHANNEL],
-});
-
-//"database"
-var joined = []
-
-console.log('hello - might be connected');
-
-client.addListener('message', function (from, to, message) {
-/*
-    console.log(from + ' => ' + to + ': ' + message);
-    client.say(CHANNEL, message);*/
+    secure: true 
 });
 
 
-setInterval(function(){
-    joined=[]
-}, 604800000)//one week
-
-var seen = function(nick){
-    for (i in joined){
-        if (foo[i]==nick){
-            return true;
-        }
+client.addListener('message'+CHANNEL, function (from, message) {
+    if(message.search(/\?/)>=0){
+        utils.tell_moderators(from+" asked: "+message,client);
     }
-    return false;
-}
+});
 
 client.addListener('join'+CHANNEL, function (nick) {
-    if (!seen()){
+    if (!utils.seen(nick)){
         client.say(CHANNEL, "Welcome to "+CHANNEL+" "+nick+"! Please feel free to check out the etherpad at "+ETHERPAD+" or ask anyone questions for information on how to get started");
-        joined.push(nick);
-        console.log("Welcomed "+nick);
+        utils.joined.push(nick);
     }
 });
 
 client.addListener('topic', function (channel, topic, nick) {
     var words = topic.split(' ');
     for (i in words) {
-        if(words[i].search(/etherpad\.mozilla\.com:9000/)>0){
+        if(words[i].search(/etherpad\.mozilla\.com:9000/)>=0){
             ETHERPAD=words[i];
         }
     }
 });
 
-//REDIS
-/*
-redis.on("error", function (err) {
-    console.log("Redis connection error to " + redis.host + ":" + redis.port + " - " + err);
+client.addListener('pm', function (nick, text) {
+    if (text=='moderate'){
+        utils.moderators[nick]=true;
+        client.say(nick, "You are now moderating")
+    }
+    if (text=='unmoderate'){
+        utils.moderators[nick]=false;
+        client.say(nick, "You are no longer moderating")
+    }
+    if (text=='status'){
+        if (utils.moderators[nick]==true){
+            client.say(nick, "You are moderating");
+        }else{
+            client.say(nick, "You are not moderating")
+        }
+    }
 });
-
-
-var redis_get= function(key,callback){
-    //Asyncronous Get Wrapper for redis
-    redis.GET(key, function(err, res){
-        callback(res);
-    });
-}
-*/
 
