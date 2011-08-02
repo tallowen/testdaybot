@@ -2,7 +2,7 @@
 var CHANNEL ='#testbot',
     ETHERPAD ='(Check channel topic)',
     irc = require('irc'),
-    utils = require('./utils')
+    utils = require('./utils.js')
 
 var client = new irc.Client('irc.mozilla.org', 'testdaybot', {
     userName: 'testdaybot',
