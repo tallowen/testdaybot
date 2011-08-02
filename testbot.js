@@ -4,7 +4,7 @@ var CHANNEL ='#testbot',
     irc = require('irc'),
     utils = require('utils')
 
-var client = new irc.Client('irc.mozilla.org', 'testbotowen', {
+var client = new irc.Client('irc.mozilla.org', 'testdaybot', {
     userName: 'testdaybot',
     realName: 'Owens testdaybot @ github.com/highriseo/testdaybot',
     port: 6697,
@@ -18,7 +18,7 @@ var client = new irc.Client('irc.mozilla.org', 'testbotowen', {
 
 
 client.addListener('message'+CHANNEL, function (from, message) {
-    if(message.search(/\?/)>=0){
+    if(message.match(/\?/)){
         utils.tell_moderators(from+" asked: "+message,client);
     }
 });
@@ -33,7 +33,7 @@ client.addListener('join'+CHANNEL, function (nick) {
 client.addListener('topic', function (channel, topic, nick) {
     var words = topic.split(' ');
     for (i in words) {
-        if(words[i].search(/etherpad\.mozilla\.com:9000/)>=0){
+        if(words[i].match(/etherpad\.mozilla\.com:9000/)){
             ETHERPAD=words[i];
         }
     }
@@ -54,6 +54,14 @@ client.addListener('pm', function (nick, text) {
         }else{
             client.say(nick, "You are not moderating")
         }
+    }
+    if (text=='help'){
+        client.say(nick, "Hello! I am the testday bot. I am here to help make testdays run more smoothly.");
+        client.say(nick,"I respond to commands only in a PM. Here are the commands I know:");
+        client.say(nick,"    'moderate' - Adds you to the list of moderators. You will be pinged when various events occur.");
+        client.say(nick,"    'unmoderate' - stop testdaybot from notifying you");
+        client.say(nick,"    'status' - see weather you are a moderator or not");
+        client.say(nick,"    'help' - see this information");
     }
 });
 
