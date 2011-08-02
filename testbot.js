@@ -2,7 +2,8 @@
 var CHANNEL ='#testbot',
     ETHERPAD ='(Check channel topic)',
     irc = require('irc'),
-    utils = require('./utils.js')
+    utils = require('./utils.js'),
+    http = require('http');
 
 var client = new irc.Client('irc.mozilla.org', 'testdaybot', {
     userName: 'testdaybot',
@@ -64,4 +65,10 @@ client.addListener('pm', function (nick, text) {
         client.say(nick,"    'help' - see this information");
     }
 });
+
+//make server to keep heroku happy
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('IRC bot at '+CHANNEL+' on irc.mozilla.org\n');
+}).listen(1337);
 
